@@ -51,6 +51,11 @@
 			<artifactId>ojdbc6</artifactId>
 			<version>11.2.0.3</version>
 		</dependency>
+		<dependency>
+			<groupId>org.zeal.persistence</groupId>
+			<artifactId>common-persistence</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<build>
