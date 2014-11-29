@@ -1,3 +1,10 @@
+# JAVA PROJECT FILES
+*.pref
+*.settings
+*.project
+*.classpath
+**/target/**
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
@@ -41,3 +48,7 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+*.prefs
+*.project
+*.classpath
