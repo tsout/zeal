@@ -20,7 +20,6 @@
 	</parent>
 
 	<artifactId>DBPerformanceTesterEAR-ejb</artifactId>
-	<packaging>ejb</packaging>
 
 	<name>DBPerformanceTesterEAR - ejb</name>
 
@@ -202,4 +201,5 @@
 
 	</profiles>
 
+	<packaging>ejb</packaging>
 </project>

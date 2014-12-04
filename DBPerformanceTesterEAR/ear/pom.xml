@@ -38,11 +38,6 @@
 		<!-- Depend on the ejb module and war so that we can package them -->
 		<dependency>
 			<groupId>org.tim.dbtester</groupId>
-			<artifactId>DBPerformanceTesterEAR-web</artifactId>
-			<type>war</type>
-		</dependency>
-		<dependency>
-			<groupId>org.tim.dbtester</groupId>
 			<artifactId>DBPerformanceTesterEAR-ejb</artifactId>
 			<type>ejb</type>
 		</dependency>

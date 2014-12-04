@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.zeal.common.persistence.PersistableObject;
 
@@ -17,6 +18,7 @@ import org.zeal.common.persistence.PersistableObject;
  * 
  */
 @Entity(name = Job.TABLE_NAME)
+@XmlRootElement
 public class Job implements PersistableObject, Serializable {
 
 	private static final long serialVersionUID = 4842969065843138489L;
@@ -148,12 +150,12 @@ public class Job implements PersistableObject, Serializable {
 		this.notes = notes;
 	}
 
-	public String getTitle() {
+	public String getJobName() {
 		return this.jobName;
 	}
 
-	public void setTitle(String title) {
-		this.jobName = title;
+	public void setJobName(String jobName) {
+		this.jobName = jobName;
 	}
 
 	public Double getCost() {

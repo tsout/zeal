@@ -14,6 +14,7 @@ import org.tim.dbtester.model.JobRequest;
 import org.tim.dbtester.model.Note;
 import org.tim.dbtester.model.Task;
 import org.tim.dbtester.service.PerformanceTestingService;
+import org.tim.dbtester.service.api.JobServiceRemote;
 import org.tim.dbtester.service.api.PerformanceTestingServiceRemote;
 
 public class RemoteEjbClient {
@@ -21,21 +22,24 @@ public class RemoteEjbClient {
 	public static void main(String[] args) throws Exception,
 			PersistenceException {
 		PerformanceTestingServiceRemote remote = lookupRemoteEJB();
-		// remote.generateData(5000);
+
+		remote.generateData(100000);
+		// remote.showNotes();
+
 		// remote.resetData();
 		// testNotes(remote);
 
-		testJobRequest(remote);
+		// testJobRequest(remote);
 
 	}
 
-	private static void testNotes(PerformanceTestingServiceRemote remote) {
+	private static void testNotes(JobServiceRemote remote) {
 		remote.addNotes();
 		remote.showNotes();
 		remote.removeNotes();
 	}
 
-	private static void testJobRequest(PerformanceTestingServiceRemote remote) {
+	private static void testJobRequest(JobServiceRemote remote) {
 
 		JobRequest jr = new JobRequest();
 		jr.setCustomerName("Bill");

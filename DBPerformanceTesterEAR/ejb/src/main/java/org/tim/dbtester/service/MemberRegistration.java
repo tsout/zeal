@@ -16,30 +16,33 @@
  */
 package org.tim.dbtester.service;
 
-import org.tim.dbtester.model.Member;
+import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import java.util.logging.Logger;
+import javax.persistence.PersistenceContext;
+
+import org.tim.dbtester.model.Member;
 
 // The @Stateless annotation eliminates the need for manual transaction demarcation
 @Stateless
 public class MemberRegistration {
 
-    @Inject
-    private Logger log;
+	// removing to fix unsatisified dependencies at injection point error
+	// @Inject
+	private Logger log = Logger.getLogger(MemberRegistration.class.getName());
 
-    @Inject
-    private EntityManager em;
+	@PersistenceContext
+	private EntityManager em;
 
-    @Inject
-    private Event<Member> memberEventSrc;
+	@Inject
+	private Event<Member> memberEventSrc;
 
-    public void register(Member member) throws Exception {
-        log.info("Registering " + member.getName());
-        em.persist(member);
-        memberEventSrc.fire(member);
-    }
+	public void register(Member member) throws Exception {
+		log.info("Registering " + member.getName());
+		em.persist(member);
+		memberEventSrc.fire(member);
+	}
 }
