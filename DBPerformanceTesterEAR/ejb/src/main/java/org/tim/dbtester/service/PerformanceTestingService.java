@@ -2,6 +2,7 @@ package org.tim.dbtester.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
@@ -16,21 +17,42 @@ import org.tim.dbtester.service.api.PerformanceTestingServiceRemote;
 public class PerformanceTestingService extends EntityService implements
 		PerformanceTestingServiceRemote {
 
+	private static final String FOREIGN = "foreign";
+
+	private static final String DOMESTIC = "domestic";
+
+	private static final String VEGETABLES = "vegetables";
+
+	private static final String FRUIT = "fruit";
+
 	Logger logger = Logger.getLogger(PerformanceTestingService.class);
 
 	private Date startTime = null;
 	private Date markTime = null;
 	private Date endTime = null;
+	Random r = new Random();
 
 	public void generateRecords(Integer numRecords) {
 
 		Integer x = 0;
-
 		while (x < numRecords) {
 			BasicEntity be = new BasicEntity();
 			be.setName("Basic Entity #" + x);
 			be.setCost(x);
 			be.setDescription(be.getName() + " description");
+
+			if (r.nextInt() % 100 < 33) {
+				be.setCategory(VEGETABLES);
+			} else {
+				be.setCategory(FRUIT);
+			}
+
+			if (r.nextInt() % 100 < 15) {
+				be.setCategory2(FOREIGN);
+			} else {
+				be.setCategory2(DOMESTIC);
+			}
+
 			em.persist(be);
 
 			// logger.info("persisted: " + be);
