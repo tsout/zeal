@@ -12,7 +12,11 @@ import org.zeal.common.persistence.PersistableObject;
 public abstract class EntityService {
 
 	@PersistenceContext
-	public EntityManager em;
+	private EntityManager em;
+
+	protected EntityManager getEntityManager() {
+		return em;
+	};
 
 	@SuppressWarnings("unchecked")
 	protected <E> List<E> findAll(Class<E> o) {

@@ -53,12 +53,12 @@ public class PerformanceTestingService extends EntityService implements
 				be.setCategory2(DOMESTIC);
 			}
 
-			em.persist(be);
+			getEntityManager().persist(be);
 
 			// logger.info("persisted: " + be);
 			x++;
 		}
-		em.flush();
+		getEntityManager().flush();
 	}
 
 	public void generateData(Integer num) {
@@ -82,19 +82,19 @@ public class PerformanceTestingService extends EntityService implements
 
 		List<?> entities = null;
 		// find all Entities
-		Query q = em.createQuery("Select be from BasicTable be",
-				BasicEntity.class);
+		Query q = getEntityManager().createQuery(
+				"Select be from BasicTable be", BasicEntity.class);
 		entities = q.getResultList();
 		for (Object be : entities) {
 
 			if (be instanceof BasicEntity) {
 				BasicEntity b = (BasicEntity) be;
-				em.remove(b);
+				getEntityManager().remove(b);
 				// logger.info("removing: " + be.toString());
 			}
 		}
 
-		em.flush();
+		getEntityManager().flush();
 
 	}
 

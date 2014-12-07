@@ -25,4 +25,6 @@ public interface JobServiceRemote {
 
 	public List<Job> getJobs();
 
+	public Job createJob(Job j);
+
 }

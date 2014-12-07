@@ -18,10 +18,14 @@ package org.tim.dbtester.util;
 
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.InjectionPoint;
 import javax.faces.context.FacesContext;
 
+import org.jboss.logging.Logger;
+
 /**
- * This class uses CDI to alias Java EE resources, such as the persistence context, to CDI beans
+ * This class uses CDI to alias Java EE resources, such as the persistence
+ * context, to CDI beans
  * 
  * <p>
  * Example injection on a managed bean field:
@@ -34,10 +38,16 @@ import javax.faces.context.FacesContext;
  */
 public class WebResources {
 
-    @Produces
-    @RequestScoped
-    public FacesContext produceFacesContext() {
-        return FacesContext.getCurrentInstance();
-    }
+	@Produces
+	@RequestScoped
+	public FacesContext produceFacesContext() {
+		return FacesContext.getCurrentInstance();
+	}
+
+	@Produces
+	public Logger produceLog(InjectionPoint injectionPoint) {
+		return Logger.getLogger(injectionPoint.getMember().getDeclaringClass()
+				.getName());
+	}
 
 }

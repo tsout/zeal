@@ -6,9 +6,11 @@ import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.zeal.common.persistence.PersistableObject;
@@ -17,14 +19,15 @@ import org.zeal.common.persistence.PersistableObject;
  * Entity implementation class for Entity: Job
  * 
  */
-@Entity(name = Job.TABLE_NAME)
+@Entity
 @XmlRootElement
+@Table(name = Job.TABLE_NAME)
 public class Job implements PersistableObject, Serializable {
 
 	private static final long serialVersionUID = 4842969065843138489L;
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	private Calendar actualStartDate;
 	private Calendar projectedStartDate;
@@ -47,9 +50,17 @@ public class Job implements PersistableObject, Serializable {
 
 	@Override
 	public String toString() {
-		String jobRequestString = ", jobRequest ["
-				+ originatingRequest.getJobName() + ","
-				+ originatingRequest.getId() + "]";
+
+		String or = "";
+		Integer or_id = -1;
+		if (originatingRequest != null) {
+
+			or = (originatingRequest.getJobName() != null) ? originatingRequest
+					.getJobName() : "";
+			or_id = (originatingRequest.getId() != null) ? originatingRequest
+					.getId() : -1;
+		}
+		String jobRequestString = ", jobRequest [" + or + "," + or_id + "]";
 		return "Job [id=" + id + ", actualStartDate=" + actualStartDate
 				+ ", projectedStartDate=" + projectedStartDate
 				+ ", estimatedStartDate=" + estimatedStartDate + ", notes="
@@ -207,6 +218,22 @@ public class Job implements PersistableObject, Serializable {
 
 	public void setOriginatingRequest(JobRequest originatingRequest) {
 		this.originatingRequest = originatingRequest;
+	}
+
+	public String getJobType() {
+		return jobType;
+	}
+
+	public void setJobType(String jobType) {
+		this.jobType = jobType;
+	}
+
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
 	}
 
 }

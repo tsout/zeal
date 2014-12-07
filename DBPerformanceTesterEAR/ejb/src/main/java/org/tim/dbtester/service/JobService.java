@@ -1,14 +1,18 @@
 package org.tim.dbtester.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.ejb.Stateless;
+import javax.inject.Named;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import org.jboss.logging.BasicLogger;
 import org.jboss.logging.Logger;
 import org.tim.dbtester.model.Job;
 import org.tim.dbtester.model.JobRequest;
@@ -16,12 +20,14 @@ import org.tim.dbtester.model.Note;
 import org.tim.dbtester.model.Task;
 import org.tim.dbtester.service.api.JobServiceRemote;
 
+@Named
+@Stateless
 public class JobService extends EntityService implements JobServiceRemote {
-	public Logger logger;
+	BasicLogger logger = Logger.getLogger(JobService.class);
 
-	public JobService(Logger logger) {
-		this.logger = logger;
-	}
+	public JobService() {
+		logger.info("instantiating job service bean");
+	};
 
 	public void addNotes() {
 
@@ -32,16 +38,17 @@ public class JobService extends EntityService implements JobServiceRemote {
 			n.setTitle("test note" + num);
 			n.setDescription("this is a very special note.." + num);
 			n.setAuthor("tjs");
-			em.persist(n);
+			getEntityManager().persist(n);
 			System.out.println("Added Note:" + n);
 		}
 	}
 
 	public List<Note> showNotes() {
-		Query q = em.createQuery("Select n From " + Note.TABLE_NAME + " n",
-				Note.class);
+		logger.info("show notes");
+		Query q = getEntityManager().createQuery(
+				"Select n From " + Note.TABLE_NAME + " n", Note.class);
 
-		List<Note> notes = null;
+		List<Note> notes = new ArrayList<Note>();
 		List<?> resultList = q.getResultList();
 		for (Object n : resultList) {
 			if (n instanceof Note) {
@@ -59,7 +66,7 @@ public class JobService extends EntityService implements JobServiceRemote {
 		List<Note> noteList;
 		noteList = findAll(Note.class);
 		for (Note n : noteList) {
-			em.remove(n);
+			getEntityManager().remove(n);
 			System.out
 					.println("removing '" + n.getTitle() + "' --" + n.getId());
 		}
@@ -68,7 +75,7 @@ public class JobService extends EntityService implements JobServiceRemote {
 
 	@Override
 	public JobRequest createJobRequest(JobRequest jr) {
-		em.persist(jr);
+		getEntityManager().persist(jr);
 		System.out.println("Added Job Request:" + jr);
 		return jr;
 	}
@@ -77,7 +84,7 @@ public class JobService extends EntityService implements JobServiceRemote {
 	public void addNoteToJobRequest(Note note, JobRequest jr) {
 
 		if ((note.getId() == null)
-				|| (em.find(Note.class, note.getId()) == null)) {
+				|| (getEntityManager().find(Note.class, note.getId()) == null)) {
 			note.setId(UUID.randomUUID());
 
 		}
@@ -86,9 +93,9 @@ public class JobService extends EntityService implements JobServiceRemote {
 					"No matching peristed job request for jr: " + jr);
 		}
 
-		if (em.find(jr.getClass(), jr.getId()) != null) {
+		if (getEntityManager().find(jr.getClass(), jr.getId()) != null) {
 			note.setJobRequest(jr);
-			em.persist(note);
+			getEntityManager().persist(note);
 			System.out.println("Added Note:" + note + " to job request:" + jr);
 		}
 	}
@@ -99,9 +106,9 @@ public class JobService extends EntityService implements JobServiceRemote {
 			throw new PersistenceException(
 					"No matching peristed job request for jr: " + jr);
 		}
-		if (em.find(jr.getClass(), jr.getId()) != null) {
+		if (getEntityManager().find(jr.getClass(), jr.getId()) != null) {
 			task.setJobRequest(jr);
-			em.persist(task);
+			getEntityManager().persist(task);
 			System.out.println("Added Task:" + task + " to job request:" + jr);
 		}
 	}
@@ -109,13 +116,13 @@ public class JobService extends EntityService implements JobServiceRemote {
 	@Override
 	public Job acceptJobRequest(JobRequest jr) {
 
-		if (em.find(jr.getClass(), jr.getId()) != null) {
+		if (getEntityManager().find(jr.getClass(), jr.getId()) != null) {
 			Job j = new Job();
 			j.setCost(jr.getMaxCost());
 			j.setJobName(jr.getJobName());
 			j.setOriginatingRequest(jr);
 			j.setLocation("3423 23rd street");
-			em.persist(j);
+			getEntityManager().persist(j);
 			System.out.println("Job Accepted:" + j + " for job request:" + jr);
 			return j;
 		}
@@ -123,11 +130,29 @@ public class JobService extends EntityService implements JobServiceRemote {
 	}
 
 	public List<Job> getJobs() {
-
-		CriteriaBuilder builder = em.getCriteriaBuilder();
+		logger.info("getting jobs");
+		CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Job> c = builder.createQuery(Job.class);
 		Root<Job> job = c.from(Job.class);
 		c.select(job);
-		return em.createQuery(c).getResultList();
+		List<?> results = getEntityManager().createQuery(c).getResultList();
+
+		List<Job> jobs = new ArrayList<Job>();
+		for (Object o : results) {
+			if (o instanceof Job) {
+				jobs.add((Job) o);
+			}
+		}
+
+		logger.info("jobs" + jobs.size());
+		return jobs;
+	}
+
+	@Override
+	public Job createJob(Job j) {
+		if (j != null) {
+			getEntityManager().persist(j);
+		}
+		return j;
 	}
 }

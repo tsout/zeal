@@ -24,6 +24,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.jboss.logging.BasicLogger;
 import org.tim.dbtester.model.Member;
 import org.tim.dbtester.service.MemberRegistration;
 
@@ -34,54 +35,63 @@ import org.tim.dbtester.service.MemberRegistration;
 @Model
 public class MemberController {
 
-    @Inject
-    private FacesContext facesContext;
+	@Inject
+	private FacesContext facesContext;
 
-    @Inject
-    private MemberRegistration memberRegistration;
+	@Inject
+	private MemberRegistration memberRegistration;
 
-    private Member newMember;
+	private Member newMember;
 
-    @Produces
-    @Named
-    public Member getNewMember() {
-        return newMember;
-    }
+	@Inject
+	private BasicLogger log;
 
-    public void register() throws Exception {
-        try {
-            memberRegistration.register(newMember);
-            facesContext.addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Registered!", "Registration successful"));
-            initNewMember();
-        } catch (Exception e) {
-            String errorMessage = getRootErrorMessage(e);
-            FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, "Registration Unsuccessful");
-            facesContext.addMessage(null, m);
-        }
-    }
+	@Produces
+	@Named
+	public Member getNewMember() {
+		log.info("getNewMember");
+		return newMember;
+	}
 
-    @PostConstruct
-    public void initNewMember() {
-        newMember = new Member();
-    }
+	public void register() throws Exception {
+		try {
+			log.info("register");
+			memberRegistration.register(newMember);
+			facesContext.addMessage(null, new FacesMessage(
+					FacesMessage.SEVERITY_INFO, "Registered!",
+					"Registration successful"));
+			initNewMember();
+		} catch (Exception e) {
+			String errorMessage = getRootErrorMessage(e);
+			FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					errorMessage, "Registration Unsuccessful");
+			facesContext.addMessage(null, m);
+		}
+	}
 
-    private String getRootErrorMessage(Exception e) {
-        // Default to general error message that registration failed.
-        String errorMessage = "Registration failed. See server log for more information";
-        if (e == null) {
-            // This shouldn't happen, but return the default messages
-            return errorMessage;
-        }
+	@PostConstruct
+	public void initNewMember() {
+		newMember = new Member();
+		log.info("creating a new member in PostConstruct");
+	}
 
-        // Start with the exception and recurse to find the root cause
-        Throwable t = e;
-        while (t != null) {
-            // Get the message from the Throwable class instance
-            errorMessage = t.getLocalizedMessage();
-            t = t.getCause();
-        }
-        // This is the root cause message
-        return errorMessage;
-    }
+	private String getRootErrorMessage(Exception e) {
+		log.info("getRootErrorMessage");
+		// Default to general error message that registration failed.
+		String errorMessage = "Registration failed. See server log for more information";
+		if (e == null) {
+			// This shouldn't happen, but return the default messages
+			return errorMessage;
+		}
+
+		// Start with the exception and recurse to find the root cause
+		Throwable t = e;
+		while (t != null) {
+			// Get the message from the Throwable class instance
+			errorMessage = t.getLocalizedMessage();
+			t = t.getCause();
+		}
+		// This is the root cause message
+		return errorMessage;
+	}
 }

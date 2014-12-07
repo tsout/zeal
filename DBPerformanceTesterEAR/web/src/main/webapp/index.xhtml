@@ -32,8 +32,6 @@
             <h:inputText id="job" value="#{jobController.newJob.jobName}" />
             <h:message for="job" errorClass="invalid"/>
             
-<!--             "#{newMember.name}" -->
-
             <h:outputLabel for="location" value="Job Location"/>
             <h:inputText id="location" value="#{jobController.newJob.location}"/>
             <h:message for="location" errorClass="invalid"/>
@@ -41,29 +39,31 @@
             <h:outputLabel for="cost" value="Job Cost:"/>
             <h:inputText id="cost" value="#{jobController.newJob.cost}"/>
             <h:message for="cost" errorClass="invalid"/>
+            
+                  <h:outputLabel for="customerName" value="customer name:"/>
+            <h:inputText id="customerName" value="#{jobController.newJob.customerName}"/>
+            <h:message for="customerName" errorClass="invalid"/>
+            
          </h:panelGrid>
 
          <p>
             <h:panelGrid columns="2">
                    <h:commandButton id="doStuff" action="#{jobController.doStuff}" value="doStuff" styleClass="register"/>
-<!--                <h:commandButton id="create" action="#{memberController.register}" value="Register" styleClass="register"/> -->
-<!--                <h:messages styleClass="messages" errorClass="invalid" infoClass="valid" warnClass="warning" -->
-<!--                            globalOnly="true"/> -->
             </h:panelGrid>
          </p>
       </h:form>
       <h2>Notes</h2>
-      <h:panelGroup rendered="#{empty notes}">
+      <h:panelGroup rendered="#{empty jobController.notes}">
          <em>No notes</em>
       </h:panelGroup>
-      <h:dataTable var="_note" value="#{notes}" rendered="#{not empty notes}" styleClass="simpletablestyle">
+      <h:dataTable var="_note" value="#{jobController.notes}" rendered="#{not empty jobController.notes}" styleClass="simpletablestyle">
          <h:column>
             <f:facet name="header">Id</f:facet>
                 #{_note.id}
             </h:column>
          <h:column>
             <f:facet name="header">Name</f:facet>
-                #{_note.name}
+                #{_note.author}
             </h:column>
          <h:column>
             <f:facet name="header">Title</f:facet>
@@ -84,6 +84,41 @@
          </h:column>
          <f:facet name="footer">
             REST URL for all notes: <a href="#{request.contextPath}/rest/notes">/rest/notes</a>
+         </f:facet>
+      </h:dataTable>
+      
+       <h2>Jobs</h2>
+      <h:panelGroup rendered="#{empty jobController.jobs}">
+         <em>No jobs</em>
+      </h:panelGroup>
+      <h:dataTable var="_job" value="#{jobController.jobs}" rendered="#{not empty jobController.jobs}" styleClass="simpletablestyle">
+         <h:column>
+            <f:facet name="header">Id</f:facet>
+                #{_job.id}
+            </h:column>
+         <h:column>
+            <f:facet name="header">Name</f:facet>
+                #{_job.jobName}
+            </h:column>
+         <h:column>
+            <f:facet name="header">Title</f:facet>
+                #{_job.location}
+            </h:column>
+         <h:column>
+            <f:facet name="header">Description</f:facet>
+                #{_job.customerName}
+            </h:column>
+         
+         <h:column>
+            <f:facet name="header">Author</f:facet>
+                #{_job.customerName}
+            </h:column>
+         <h:column>
+            <f:facet name="header">REST URL</f:facet>
+            <a href="#{request.contextPath}/rest/notes/#{_job.id}">/rest/notes/#{_job.id}</a>
+         </h:column>
+         <f:facet name="footer">
+            REST URL for all notes: <a href="#{request.contextPath}/rest/jobs">/rest/jobs</a>
          </f:facet>
       </h:dataTable>
    </ui:define>

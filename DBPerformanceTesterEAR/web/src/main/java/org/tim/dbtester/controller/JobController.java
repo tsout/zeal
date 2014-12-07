@@ -1,14 +1,15 @@
 package org.tim.dbtester.controller;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.inject.Model;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.Produces;
 
+import org.jboss.logging.BasicLogger;
 import org.tim.dbtester.model.Job;
 import org.tim.dbtester.model.Note;
 import org.tim.dbtester.service.api.JobServiceRemote;
@@ -16,7 +17,11 @@ import org.tim.dbtester.service.api.JobServiceRemote;
 @Model
 public class JobController {
 
-	private Logger log = Logger.getLogger(JobController.class.getName());
+	@Inject
+	private BasicLogger log;
+
+	@Inject
+	private FacesContext facesContext;
 
 	@Inject
 	private JobServiceRemote jobRemote;
@@ -34,7 +39,8 @@ public class JobController {
 	// };
 
 	public void doStuff() {
-		log.info("doing stuff...");
+		log.info("doing stuff..." + newJob);
+		jobRemote.createJob(newJob);
 	}
 
 	@PostConstruct
@@ -45,6 +51,12 @@ public class JobController {
 		jobs = jobRemote.getJobs();
 		log.info("initializing a new job .. " + newJob);
 	}
+
+	// @PostConstruct
+	// public void initNewJob() {
+	// newJob = new Job();
+	// log.info("creating a new job in PostConstruct");
+	// }
 
 	@Produces
 	@Named
@@ -63,6 +75,7 @@ public class JobController {
 	@Produces
 	@Named
 	public Job getNewJob() {
+		log.info("getting a new job");
 		return newJob;
 	}
 }

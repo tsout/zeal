@@ -37,11 +37,6 @@
 
 		<!-- Depend on the ejb module and war so that we can package them -->
 		<dependency>
-			<groupId>org.tim.dbtester</groupId>
-			<artifactId>DBPerformanceTesterEAR-ejb</artifactId>
-			<type>ejb</type>
-		</dependency>
-		<dependency>
 			<groupId>com.oracle</groupId>
 			<artifactId>ojdbc6</artifactId>
 			<version>11.2.0.3</version>
@@ -50,6 +45,11 @@
 			<groupId>org.zeal.persistence</groupId>
 			<artifactId>common-persistence</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.tim.dbtester</groupId>
+			<artifactId>DBPerformanceTesterEAR-web</artifactId>
+			<type>war</type>
 		</dependency>
 	</dependencies>
 
