@@ -8,21 +8,23 @@ public class Stippel implements Serializable {
 	 */
 	private static final long serialVersionUID = 4082790862488581924L;
 	public Stippel(){};
-private char stipple; 
-private int width;
+private char stippelMark; 
+private Integer width;
 private int height;
 private int weight;
+private boolean visible;
+
 /**
  * @return the stipple
  */
-public final char getStipple() {
-	return stipple;
+public final char getStippelMark() {
+	return stippelMark;
 }
 /**
  * @param stipple the stipple to set
  */
-public final void setStipple(char stipple) {
-	this.stipple = stipple;
+public final void setStippelMark(char stipple) {
+	this.stippelMark = stipple;
 }
 /**
  * @return the width
@@ -60,13 +62,19 @@ public final int getWeight() {
 public final void setWeight(int weight) {
 	this.weight = weight;
 }
+public boolean isVisible() {
+	return visible;
+}
+public void setVisible(boolean visible) {
+	this.visible = visible;
+}
 /* (non-Javadoc)
  * @see java.lang.Object#toString()
  */
 @Override
 public String toString() {
 	StringBuilder builder = new StringBuilder();
-	builder.append("Stippel [stipple=").append(stipple).append(", width=").append(width).append(", height=")
+	builder.append("Stippel [stipple=").append(stippelMark).append(", width=").append(width).append(", height=")
 			.append(height).append(", weight=").append(weight).append("]");
 	return builder.toString();
 }
@@ -78,7 +86,7 @@ public int hashCode() {
 	final int prime = 31;
 	int result = 1;
 	result = prime * result + height;
-	result = prime * result + stipple;
+	result = prime * result + stippelMark;
 	result = prime * result + weight;
 	result = prime * result + width;
 	return result;
@@ -97,7 +105,7 @@ public boolean equals(Object obj) {
 	Stippel other = (Stippel) obj;
 	if (height != other.height)
 		return false;
-	if (stipple != other.stipple)
+	if (stippelMark != other.stippelMark)
 		return false;
 	if (weight != other.weight)
 		return false;
