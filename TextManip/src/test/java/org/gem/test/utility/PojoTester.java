@@ -1,7 +1,6 @@
 package org.gem.test.utility;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -11,6 +10,7 @@ import java.util.List;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.gem.text.model.Stippel;
+import org.junit.Test;
 import org.mockito.Mockito;
 
 public class PojoTester {
@@ -21,7 +21,29 @@ public class PojoTester {
 		assertTrue("Pojos must implement the Serializable interface",hasInterface(uut,"java.io.Serializable"));
 	}; 
 	
-	public static void testPojoEqualsMethod(Class<?> uut){assertTrue("Pojos must implement the equals method",hasMethod(uut,"equals", true));}
+	/**
+	 * validates that the provided class defines an 'equals' method
+	 * @param uut
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 */
+	@SuppressWarnings({ "null", "unchecked" })
+	public static <T> void testPojoEqualsMethod(Class<?> uut) throws InstantiationException, IllegalAccessException{
+		assertTrue("Pojos must implement the equals method",hasMethod(uut,"equals", true));
+	T someObject = (T) uut.newInstance();
+	assertTrue("An object must be equal to itself",someObject.equals(someObject));	
+	assertFalse("A declared object can not be equal to null",someObject.equals(null));
+	
+	T someObject3 = (T)  uut.newInstance(); 
+	T someObject4 = (T)  uut.newInstance(); 
+	assertTrue("Two objects with same property values must be equal", someObject3.equals(someObject4));
+	
+	}
+	
+	/**
+	 * validates that the provide class defines a 'toString'  method
+	 * @param uut
+	 */
 	public static void testPojoToStringMethod(Class<?> uut){ assertTrue("Pojos must implement the toString method",hasMethod(uut,"toString",true));}
 
 	private static boolean hasInterface(Class<?>uut, String interfaceNameCriteria){
@@ -48,6 +70,26 @@ public class PojoTester {
 	}
 
 
+	/**
+	 * verifies that a pojo has a public constructor
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 */
+	public static void testPojoHasPublicConstructor(Class<?> uut) {
+		try {
+			
+			//inner classes 
+			Class<?> enclosingClass = uut.getEnclosingClass();
+			if(enclosingClass!=null){
+				uut.getDeclaredConstructor(enclosingClass);	
+			}else{
+				uut.getDeclaredConstructor();
+			}
+			
+		} catch (NoSuchMethodException e) {
+			fail("A pojo must have a default, no param constructor");
+		}
+	}
 	/**
 	 * fields can be simple, indexed, or mapped objects, or primatives. Each
 	 * case has to be handled differently.
