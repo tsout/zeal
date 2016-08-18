@@ -18,7 +18,7 @@ public class PojoTester {
 	}
 
 	public static void testPojoSerialization(Class<?> uut){
-		assertTrue("Pojos must implement the Serializable interface",hasInterface(uut,"java.io.Serializable"));
+		assertTrue("Pojos must implement the Serializable interface",ReflectionUtil.hasInterface(uut,"java.io.Serializable"));
 	}; 
 	
 	/**
@@ -46,17 +46,6 @@ public class PojoTester {
 	 */
 	public static void testPojoToStringMethod(Class<?> uut){ assertTrue("Pojos must implement the toString method",hasMethod(uut,"toString",true));}
 
-	private static boolean hasInterface(Class<?>uut, String interfaceNameCriteria){
-		
-		for (Class<?> interfaceClass: uut.getInterfaces()){
-			String interfaceName = interfaceClass.getName();
-			System.out.println("Testing:"+interfaceName);
-			if (interfaceName.equals(interfaceNameCriteria)){
-				return true;
-			}
-		}
-		return false;
-	}
 	private static boolean hasMethod(Class<?> uut, String methodNameCriteria, boolean mustBePublic) {
 		for (Method m: uut.getDeclaredMethods()){
 			String methodName = m.getName();
